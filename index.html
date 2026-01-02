@@ -37,6 +37,15 @@
       <p class="ck-sub">年1回、標準モデルとのズレだけを60秒で確認。</p>
     </header>
 
+    <section class="card guide-card">
+      <h2 class="card-title">30秒ガイド</h2>
+      <ul class="guide-list">
+        <li>このツールは「商品名」ではなく、資産の中身で分けます</li>
+        <li>投資信託→中身 / 暗号資産→株式 / 学資保険→現金</li>
+        <li>正確さより、一貫した考え方で入力してください</li>
+      </ul>
+    </section>
+
     <!-- 入力：基本 -->
     <section class="card card--accent">
       <h2 class="card-title">基本入力</h2>
@@ -81,7 +90,13 @@
       <div id="amountBox">
         <div class="grid-2">
           <div class="pct-field">
-            <label for="amtStocks">株式</label>
+            <div class="label-row">
+              <label for="amtStocks">株式</label>
+              <details class="mini-help">
+                <summary aria-label="株式の入力ヘルプ">？</summary>
+                <div class="mini-help-body">株、株式投信、ETF、暗号資産</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="amtStocks" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
               <span class="pct">万円</span>
@@ -89,7 +104,13 @@
           </div>
 
           <div class="pct-field">
-            <label for="amtBonds">債券</label>
+            <div class="label-row">
+              <label for="amtBonds">債券</label>
+              <details class="mini-help">
+                <summary aria-label="債券の入力ヘルプ">？</summary>
+                <div class="mini-help-body">国債・社債、債券投信</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="amtBonds" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
               <span class="pct">万円</span>
@@ -97,7 +118,13 @@
           </div>
 
           <div class="pct-field">
-            <label for="amtCash">現金</label>
+            <div class="label-row">
+              <label for="amtCash">現金</label>
+              <details class="mini-help">
+                <summary aria-label="現金の入力ヘルプ">？</summary>
+                <div class="mini-help-body">預金、定期預金、生活防衛資金、学資保険</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="amtCash" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
               <span class="pct">万円</span>
@@ -105,7 +132,13 @@
           </div>
 
           <div class="pct-field">
-            <label for="amtOther">その他</label>
+            <div class="label-row">
+              <label for="amtOther">その他</label>
+              <details class="mini-help">
+                <summary aria-label="その他の入力ヘルプ">？</summary>
+                <div class="mini-help-body">金、商品、オルタナティブ投資など</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="amtOther" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
               <span class="pct">万円</span>
@@ -128,7 +161,13 @@
       <div id="percentBox" hidden>
         <div class="grid-2">
           <div class="pct-field">
-            <label for="pctStocks">株式</label>
+            <div class="label-row">
+              <label for="pctStocks">株式</label>
+              <details class="mini-help">
+                <summary aria-label="株式の入力ヘルプ">？</summary>
+                <div class="mini-help-body">株、株式投信、ETF、暗号資産</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="pctStocks" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
               <span class="pct">%</span>
@@ -136,7 +175,13 @@
           </div>
 
           <div class="pct-field">
-            <label for="pctBonds">債券</label>
+            <div class="label-row">
+              <label for="pctBonds">債券</label>
+              <details class="mini-help">
+                <summary aria-label="債券の入力ヘルプ">？</summary>
+                <div class="mini-help-body">国債・社債、債券投信</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="pctBonds" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
               <span class="pct">%</span>
@@ -144,7 +189,13 @@
           </div>
 
           <div class="pct-field">
-            <label for="pctCash">現金</label>
+            <div class="label-row">
+              <label for="pctCash">現金</label>
+              <details class="mini-help">
+                <summary aria-label="現金の入力ヘルプ">？</summary>
+                <div class="mini-help-body">預金、定期預金、生活防衛資金、学資保険</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="pctCash" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
               <span class="pct">%</span>
@@ -152,7 +203,13 @@
           </div>
 
           <div class="pct-field">
-            <label for="pctOther">その他</label>
+            <div class="label-row">
+              <label for="pctOther">その他</label>
+              <details class="mini-help">
+                <summary aria-label="その他の入力ヘルプ">？</summary>
+                <div class="mini-help-body">金、商品、オルタナティブ投資など</div>
+              </details>
+            </div>
             <div class="pct-wrap">
               <input id="pctOther" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
               <span class="pct">%</span>
@@ -282,19 +339,19 @@
         <div class="faq-body">
           <div class="faq-item">
             <div class="faq-q">Q1. 金額と％はどちらで入力すればいいですか？</div>
-            <div class="faq-a">A. どちらでも構いません。金額で入力した場合は、合計金額から自動的に％へ換算して判定します。普段、資産を金額で把握している方には「金額入力」がおすすめです。</div>
+            <div class="faq-a">A. どちらの入力でも判定できます。金額で入力した場合は、合計金額から自動的に％へ換算して判定します。普段、資産を金額で把握している方には「金額入力」がおすすめです。</div>
           </div>
           <div class="faq-item">
             <div class="faq-q">Q2. 投資信託はどこに入れればいいですか？</div>
             <div class="faq-a">A. 投資信託は「中身」に応じて、株式・債券などに含めてください。このツールは、商品名ではなく資産の性質（株式・債券・現金）を見るためのものです。</div>
           </div>
           <div class="faq-item">
-            <div class="faq-q">Q3. 「その他」には何を入れればいいですか？</div>
-            <div class="faq-a">A. REIT、金、オルタナティブ資産など、株式・債券・現金に当てはまらないものをまとめて入れてください。標準モデルでは「その他」は0%として扱い、差分のみを表示します。</div>
+            <div class="faq-q">Q3. 学資保険はどこに入れればいいですか？</div>
+            <div class="faq-a">A. 学資保険は元本確保型の貯蓄として扱い、現金に含めてください。</div>
           </div>
           <div class="faq-item">
             <div class="faq-q">Q4. 暗号資産は独立した資産として扱わないのですか？</div>
-            <div class="faq-a">A. このツールでは、暗号資産は「株式内の高リスク要素」として参考表示します。配分全体の確認を目的としており、暗号資産を主役にはしていません。</div>
+            <div class="faq-a">A. このツールでは、暗号資産は株式に含めて扱います。配分全体の確認を目的としており、暗号資産を主役にはしていません。</div>
           </div>
           <div class="faq-item">
             <div class="faq-q">Q5. この結果は投資判断に使えますか？</div>
