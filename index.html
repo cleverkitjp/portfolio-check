@@ -66,49 +66,108 @@
 
     <!-- 入力：配分 -->
     <section class="card card--accent" id="allocCard">
-      <h2 class="card-title">現在の資産配分（合計100%）</h2>
+      <h2 class="card-title">現在の資産配分</h2>
 
-      <div class="grid-2">
-        <div class="pct-field">
-          <label for="pctStocks">株式</label>
-          <div class="pct-wrap">
-            <input id="pctStocks" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
-            <span class="pct">%</span>
-          </div>
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">入力方法</span>
         </div>
-
-        <div class="pct-field">
-          <label for="pctBonds">債券</label>
-          <div class="pct-wrap">
-            <input id="pctBonds" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
-            <span class="pct">%</span>
-          </div>
-        </div>
-
-        <div class="pct-field">
-          <label for="pctCash">現金</label>
-          <div class="pct-wrap">
-            <input id="pctCash" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
-            <span class="pct">%</span>
-          </div>
-        </div>
-
-        <div class="pct-field">
-          <label for="pctOther">その他</label>
-          <div class="pct-wrap">
-            <input id="pctOther" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
-            <span class="pct">%</span>
-          </div>
+        <div class="seg seg-2" role="radiogroup" aria-label="入力方法">
+          <button type="button" class="seg-btn is-selected" data-mode="amount" aria-checked="true" role="radio">金額（おすすめ）</button>
+          <button type="button" class="seg-btn" data-mode="percent" aria-checked="false" role="radio">%</button>
         </div>
       </div>
 
-      <div class="sum-row" aria-live="polite">
-        <div class="sum-left">
-          <span class="sum-label">合計</span>
-          <span class="sum-value" id="sumValue">0%</span>
+      <div id="amountBox">
+        <div class="grid-2">
+          <div class="pct-field">
+            <label for="amtStocks">株式</label>
+            <div class="pct-wrap">
+              <input id="amtStocks" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
+              <span class="pct">万円</span>
+            </div>
+          </div>
+
+          <div class="pct-field">
+            <label for="amtBonds">債券</label>
+            <div class="pct-wrap">
+              <input id="amtBonds" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
+              <span class="pct">万円</span>
+            </div>
+          </div>
+
+          <div class="pct-field">
+            <label for="amtCash">現金</label>
+            <div class="pct-wrap">
+              <input id="amtCash" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
+              <span class="pct">万円</span>
+            </div>
+          </div>
+
+          <div class="pct-field">
+            <label for="amtOther">その他</label>
+            <div class="pct-wrap">
+              <input id="amtOther" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" />
+              <span class="pct">万円</span>
+            </div>
+          </div>
         </div>
-        <div class="sum-right">
-          <span class="sum-msg" id="sumMsg">株式・債券・現金・その他の合計を100%にしてください</span>
+
+        <div class="sum-row" aria-live="polite" id="amountSumRow">
+          <div class="sum-left">
+            <span class="sum-label">合計</span>
+            <span class="sum-value" id="amountSumValue">0万円</span>
+          </div>
+          <div class="sum-right">
+            <span class="sum-msg" id="amountSumMsg">合計が0より大きいと判定できます</span>
+          </div>
+        </div>
+        <div class="amount-preview" id="amountPreview" hidden></div>
+      </div>
+
+      <div id="percentBox" hidden>
+        <div class="grid-2">
+          <div class="pct-field">
+            <label for="pctStocks">株式</label>
+            <div class="pct-wrap">
+              <input id="pctStocks" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+              <span class="pct">%</span>
+            </div>
+          </div>
+
+          <div class="pct-field">
+            <label for="pctBonds">債券</label>
+            <div class="pct-wrap">
+              <input id="pctBonds" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+              <span class="pct">%</span>
+            </div>
+          </div>
+
+          <div class="pct-field">
+            <label for="pctCash">現金</label>
+            <div class="pct-wrap">
+              <input id="pctCash" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+              <span class="pct">%</span>
+            </div>
+          </div>
+
+          <div class="pct-field">
+            <label for="pctOther">その他</label>
+            <div class="pct-wrap">
+              <input id="pctOther" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+              <span class="pct">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sum-row" aria-live="polite" id="percentSumRow">
+          <div class="sum-left">
+            <span class="sum-label">合計</span>
+            <span class="sum-value" id="sumValue">0%</span>
+          </div>
+          <div class="sum-right">
+            <span class="sum-msg" id="sumMsg">株式・債券・現金・その他の合計を100%にしてください</span>
+          </div>
         </div>
       </div>
 
@@ -210,9 +269,37 @@
       <h2 class="card-title">使い方</h2>
       <ol class="steps">
         <li>年齢とリスク許容度を選択</li>
-        <li>資産配分（%）を入力（合計100%）</li>
+        <li>資産配分（金額 or %）を入力</li>
         <li>「判定する」でズレを確認</li>
       </ol>
+    </section>
+
+    <section class="card">
+      <details class="faq">
+        <summary>よくある質問</summary>
+        <div class="faq-body">
+          <div class="faq-item">
+            <div class="faq-q">Q1. 金額と％はどちらで入力すればいいですか？</div>
+            <div class="faq-a">A. どちらでも構いません。金額で入力した場合は、合計金額から自動的に％へ換算して判定します。普段、資産を金額で把握している方には「金額入力」がおすすめです。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q2. 投資信託はどこに入れればいいですか？</div>
+            <div class="faq-a">A. 投資信託は「中身」に応じて、株式・債券などに含めてください。このツールは、商品名ではなく資産の性質（株式・債券・現金）を見るためのものです。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q3. 「その他」には何を入れればいいですか？</div>
+            <div class="faq-a">A. REIT、金、オルタナティブ資産など、株式・債券・現金に当てはまらないものをまとめて入れてください。標準モデルでは「その他」は0%として扱い、差分のみを表示します。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q4. 暗号資産は独立した資産として扱わないのですか？</div>
+            <div class="faq-a">A. このツールでは、暗号資産は「株式内の高リスク要素」として参考表示します。配分全体の確認を目的としており、暗号資産を主役にはしていません。</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Q5. この結果は投資判断に使えますか？</div>
+            <div class="faq-a">A. いいえ。一般的な目安として、年1回「標準モデルと比べてズレていないか」を確認するためのツールです。売買や投資判断を促すものではありません。</div>
+          </div>
+        </div>
+      </details>
     </section>
   </main>
 

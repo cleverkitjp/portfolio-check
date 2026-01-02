@@ -7,13 +7,27 @@
   const age = el("age");
   const agePill = el("agePill");
 
-  const riskButtons = Array.from(document.querySelectorAll(".seg-btn"));
+  const riskButtons = Array.from(document.querySelectorAll("[data-risk]"));
   const riskHint = el("riskHint");
+
+  const modeButtons = Array.from(document.querySelectorAll("[data-mode]"));
+  const percentBox = el("percentBox");
+  const amountBox = el("amountBox");
+
+  const amtStocks = el("amtStocks");
+  const amtBonds = el("amtBonds");
+  const amtCash = el("amtCash");
+  const amtOther = el("amtOther");
+  const amountSumRow = el("amountSumRow");
+  const amountSumValue = el("amountSumValue");
+  const amountSumMsg = el("amountSumMsg");
+  const amountPreview = el("amountPreview");
 
   const pctStocks = el("pctStocks");
   const pctBonds = el("pctBonds");
   const pctCash = el("pctCash");
   const pctOther = el("pctOther");
+  const percentSumRow = el("percentSumRow");
 
   const sumValue = el("sumValue");
   const sumMsg = el("sumMsg");
@@ -46,6 +60,7 @@
 
   // --- State
   let selectedRisk = null; // 'low' | 'mid' | 'high'
+  let mode = "amount"; // 'amount' | 'percent'
 
   // --- Model Table (MVP)
   // ageBand: 20-34, 35-49, 50-64, 65+
@@ -106,11 +121,20 @@
     return { stocks: s, bonds: b, cash: c, other: o };
   }
 
+  function readAmountAlloc() {
+    const s = clampOrNaN(amtStocks.value);
+    const b = clampOrNaN(amtBonds.value);
+    const c = clampOrNaN(amtCash.value);
+    const o = clampOrNaN(amtOther.value);
+
+    return { stocks: s, bonds: b, cash: c, other: o };
+  }
+
   function allocSum(a) {
     return a.stocks + a.bonds + a.cash + a.other;
   }
 
-  function showAllocStatus() {
+  function showPercentStatus() {
     const a = readAlloc();
 
     // Range validation (show first issue only, keep minimal)
@@ -133,13 +157,12 @@
 
     allocError.hidden = true;
     allocCard.classList.remove("has-error");
-    allocCard.querySelector(".sum-row").classList.remove("ok");
+    percentSumRow.classList.remove("ok");
 
     if (rangeError) {
       allocError.textContent = rangeError;
       allocError.hidden = false;
       sumMsg.textContent = "入力値を確認してください";
-      btnCalc.disabled = true;
       return { ok: false, sumOk: false, sum: sumRounded };
     }
 
@@ -147,17 +170,88 @@
     const sumOk = nearlyEqual(sum, 100, 0.05); // allow tiny float error
 
     if (sumOk) {
-      allocCard.querySelector(".sum-row").classList.add("ok");
+      percentSumRow.classList.add("ok");
       sumMsg.textContent = "OK（合計100%）";
     } else {
       if (diff > 0) sumMsg.textContent = `あと +${Math.abs(diff)}%`;
       else sumMsg.textContent = `${Math.abs(diff)}% 超過`;
     }
 
-    const canCalc = sumOk && !!selectedRisk;
-    btnCalc.disabled = !canCalc;
-
     return { ok: true, sumOk, sum: sumRounded };
+  }
+
+  function showAmountStatus() {
+    const a = readAmountAlloc();
+    const entries = [
+      ["株式", a.stocks],
+      ["債券", a.bonds],
+      ["現金", a.cash],
+      ["その他", a.other],
+    ];
+
+    let rangeError = null;
+    for (const [name, val] of entries) {
+      if (Number.isNaN(val)) { rangeError = `${name} は数値で入力してください。`; break; }
+      if (val < 0) { rangeError = `${name} は 0 以上で入力してください。`; break; }
+    }
+
+    const sum = allocSum(a);
+    const sumRounded = round1(sum);
+    amountSumValue.textContent = `${sumRounded}万円`;
+
+    allocError.hidden = true;
+    amountSumRow.classList.remove("ok");
+    amountPreview.hidden = true;
+
+    if (rangeError) {
+      allocError.textContent = rangeError;
+      allocError.hidden = false;
+      amountSumMsg.textContent = "入力値を確認してください";
+      return { ok: false, sumOk: false, sum: sumRounded, alloc: a, percentAlloc: null };
+    }
+
+    const sumOk = sum > 0;
+    if (sumOk) {
+      amountSumRow.classList.add("ok");
+      amountSumMsg.textContent = "OK（合計>0）";
+    } else {
+      amountSumMsg.textContent = "合計が0より大きいと判定できます";
+    }
+
+    if (sumOk) {
+      const percentAlloc = toPercentAlloc(a, sum);
+      amountPreview.textContent = `換算後：株式${round1(percentAlloc.stocks)}%/債券${round1(percentAlloc.bonds)}%/現金${round1(percentAlloc.cash)}%/その他${round1(percentAlloc.other)}%`;
+      amountPreview.hidden = false;
+      return { ok: true, sumOk, sum: sumRounded, alloc: a, percentAlloc };
+    }
+
+    return { ok: true, sumOk, sum: sumRounded, alloc: a, percentAlloc: null };
+  }
+
+  function toPercentAlloc(a, total) {
+    if (!total || total <= 0) return null;
+    return {
+      stocks: (a.stocks / total) * 100,
+      bonds: (a.bonds / total) * 100,
+      cash: (a.cash / total) * 100,
+      other: (a.other / total) * 100,
+    };
+  }
+
+  function showAllocStatus() {
+    if (mode === "percent") {
+      percentBox.hidden = false;
+      amountBox.hidden = true;
+      return showPercentStatus();
+    }
+    percentBox.hidden = true;
+    amountBox.hidden = false;
+    return showAmountStatus();
+  }
+
+  function updateCalcState() {
+    const status = showAllocStatus();
+    btnCalc.disabled = !(status.sumOk && !!selectedRisk);
   }
 
   function showEqStatus() {
@@ -229,7 +323,43 @@
     });
     riskHint.textContent = `選択中：${RISK_LABEL[r]}`;
     allocError.hidden = true;
-    showAllocStatus();
+    updateCalcState();
+  }
+
+  function setMode(nextMode) {
+    if (mode === nextMode) return;
+    const prevMode = mode;
+    mode = nextMode;
+
+    modeButtons.forEach((btn) => {
+      const isSel = btn.dataset.mode === mode;
+      btn.classList.toggle("is-selected", isSel);
+      btn.setAttribute("aria-checked", isSel ? "true" : "false");
+    });
+
+    allocError.hidden = true;
+    eqError.hidden = true;
+    resultCard.hidden = true;
+    cryptoBox.hidden = true;
+
+    if (prevMode === "amount" && nextMode === "percent") {
+      const amountStatus = showAmountStatus();
+      if (amountStatus.ok && amountStatus.sumOk && amountStatus.percentAlloc) {
+        const p = amountStatus.percentAlloc;
+        pctStocks.value = round1(p.stocks);
+        pctBonds.value = round1(p.bonds);
+        pctCash.value = round1(p.cash);
+        pctOther.value = round1(p.other);
+      } else {
+        [pctStocks, pctBonds, pctCash, pctOther].forEach((x) => (x.value = ""));
+      }
+    }
+
+    if (prevMode === "percent" && nextMode === "amount") {
+      [amtStocks, amtBonds, amtCash, amtOther].forEach((x) => (x.value = ""));
+    }
+
+    updateCalcState();
   }
 
   function resetAll() {
@@ -242,14 +372,21 @@
     });
     riskHint.textContent = "選択してください";
 
-    [pctStocks, pctBonds, pctCash, pctOther, eqJp, eqGlobal, eqCrypto].forEach((x) => (x.value = ""));
+    [pctStocks, pctBonds, pctCash, pctOther, amtStocks, amtBonds, amtCash, amtOther, eqJp, eqGlobal, eqCrypto].forEach((x) => (x.value = ""));
     allocError.hidden = true;
     eqError.hidden = true;
 
     resultCard.hidden = true;
     cryptoBox.hidden = true;
 
-    showAllocStatus();
+    mode = "amount";
+    modeButtons.forEach((btn) => {
+      const isSel = btn.dataset.mode === mode;
+      btn.classList.toggle("is-selected", isSel);
+      btn.setAttribute("aria-checked", isSel ? "true" : "false");
+    });
+
+    updateCalcState();
     showEqStatus();
     clearCanvas();
   }
@@ -473,14 +610,16 @@
 
     const allocStatus = showAllocStatus();
     if (!allocStatus.ok || !allocStatus.sumOk) {
-      allocError.textContent = "合計が100%になるまで判定できません。";
+      allocError.textContent = mode === "percent"
+        ? "合計が100%になるまで判定できません。"
+        : "合計が0より大きいと判定できます。";
       allocError.hidden = false;
       resultCard.hidden = true;
       cryptoBox.hidden = true;
       return;
     }
 
-    const youAlloc = readAlloc();
+    const youAlloc = mode === "percent" ? readAlloc() : allocStatus.percentAlloc;
     const band = getAgeBand(ageVal);
     const modelBase = MODELS[band][selectedRisk];
 
@@ -553,9 +692,22 @@
   const allocInputs = [pctStocks, pctBonds, pctCash, pctOther];
   allocInputs.forEach((inp) => {
     inp.addEventListener("input", () => {
-      showAllocStatus();
-      // live hide result if invalid
-      const st = showAllocStatus();
+      if (mode !== "percent") return;
+      const st = showPercentStatus();
+      updateCalcState();
+      if (!st.sumOk) {
+        resultCard.hidden = true;
+        cryptoBox.hidden = true;
+      }
+    });
+  });
+
+  const amountInputs = [amtStocks, amtBonds, amtCash, amtOther];
+  amountInputs.forEach((inp) => {
+    inp.addEventListener("input", () => {
+      if (mode !== "amount") return;
+      const st = showAmountStatus();
+      updateCalcState();
       if (!st.sumOk) {
         resultCard.hidden = true;
         cryptoBox.hidden = true;
@@ -574,9 +726,13 @@
   btnCalc.addEventListener("click", calculate);
   btnReset.addEventListener("click", resetAll);
 
+  modeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => setMode(btn.dataset.mode));
+  });
+
   // initial
   agePill.textContent = `${age.value}歳`;
-  showAllocStatus();
+  updateCalcState();
   showEqStatus();
   clearCanvas();
 
