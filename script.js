@@ -220,7 +220,7 @@
 
     if (sumOk) {
       const percentAlloc = toPercentAlloc(a, sum);
-      amountPreview.textContent = `換算後：株式${round1(percentAlloc.stocks)}%/債券${round1(percentAlloc.bonds)}%/現金${round1(percentAlloc.cash)}%/その他${round1(percentAlloc.other)}%`;
+      amountPreview.textContent = `換算後：株式 ${round1(percentAlloc.stocks)}% / 債券 ${round1(percentAlloc.bonds)}% / 現金 ${round1(percentAlloc.cash)}% / その他 ${round1(percentAlloc.other)}%`;
       amountPreview.hidden = false;
       return { ok: true, sumOk, sum: sumRounded, alloc: a, percentAlloc };
     }

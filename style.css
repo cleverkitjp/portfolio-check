@@ -49,6 +49,15 @@ input { font: inherit; }
 .card-title { margin: 0 0 12px; font-size: 16px; }
 .subhead { margin: 0 0 8px; font-size: 14px; color: var(--text); }
 
+.guide-card { border-style: dashed; }
+.guide-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text);
+  display: grid;
+  gap: 6px;
+}
+
 .field { margin: 12px 0 14px; }
 .field-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
 .field-label { font-weight: 700; }
@@ -131,6 +140,49 @@ input[type="range"]::-moz-range-track {
 @media (max-width: 520px) {
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr; }
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+}
+.label-row label { margin: 0; }
+
+.mini-help {
+  margin: 0;
+  position: relative;
+}
+.mini-help summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-sub);
+  background: var(--card);
+}
+.mini-help summary::-webkit-details-marker { display: none; }
+.mini-help[open] summary {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.mini-help-body {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 12px;
+  color: var(--text-sub);
+  max-width: 240px;
 }
 
 .pct-field label { display: block; font-weight: 700; margin: 0 0 6px; }
