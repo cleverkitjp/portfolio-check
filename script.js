@@ -597,7 +597,8 @@
   }
 
   // --- Main calc
-  function calculate() {
+  function calculate(options = {}) {
+    const { scroll = false } = options;
     // guard
     allocError.hidden = true;
     eqError.hidden = true;
@@ -647,9 +648,6 @@
     renderDiffList(diffAll);
     renderModelMeta(ageVal, selectedRisk);
 
-    // chart
-    drawChart(modelAlloc, youAlloc);
-
     // crypto note (only when equity breakdown is used AND valid AND sums 100)
     const eqStatus = showEqStatus();
     cryptoBox.hidden = true;
@@ -671,7 +669,14 @@
     }
 
     resultCard.hidden = false;
-    resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // chart (render after card is visible to avoid overscaled text)
+    requestAnimationFrame(() => {
+      drawChart(modelAlloc, youAlloc);
+      if (scroll) {
+        resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
   }
 
   // --- Events
@@ -681,7 +686,7 @@
     showAllocStatus();
     if (!resultCard.hidden) {
       // soft update chart/model if already shown and input still valid
-      if (!btnCalc.disabled) calculate();
+      if (!btnCalc.disabled) calculate({ scroll: false });
     }
   });
 
@@ -723,7 +728,7 @@
     });
   });
 
-  btnCalc.addEventListener("click", calculate);
+  btnCalc.addEventListener("click", () => calculate({ scroll: true }));
   btnReset.addEventListener("click", resetAll);
 
   modeButtons.forEach((btn) => {
@@ -741,7 +746,7 @@
   window.addEventListener("resize", () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
-      if (!resultCard.hidden) calculate();
+      if (!resultCard.hidden) calculate({ scroll: false });
       else clearCanvas();
     }, 120);
   });
