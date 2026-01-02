@@ -497,7 +497,7 @@
     const rect = canvasEl.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     const w = Math.max(320, Math.floor(rect.width * dpr));
-    const h = Math.max(220, Math.floor(220 * dpr));
+    const h = Math.max(240, Math.floor(240 * dpr));
     if (canvasEl.width !== w || canvasEl.height !== h) {
       canvasEl.width = w;
       canvasEl.height = h;
@@ -514,10 +514,10 @@
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
-    const pad = 14 * dpr;
-    const left = 86 * dpr;     // label space
-    const top = 16 * dpr;
-    const rowH = 42 * dpr;
+    const pad = 20 * dpr;
+    const left = 96 * dpr;     // label space
+    const top = 24 * dpr;
+    const rowH = 46 * dpr;
     const barH = 12 * dpr;
     const gap = 8 * dpr;
 
