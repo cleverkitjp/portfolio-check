@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F6517NYNFF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F6517NYNFF');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ポートフォリオ定期チェック｜標準モデルとのズレを60秒で可視化</title>
+  <meta name="description" content="年齢とリスク許容度、資産配分（%）を入れるだけ。標準モデルとの差を横棒グラフで可視化し、年1回の見直しを促す無料ツール（投資助言ではありません）。スマホ対応・登録不要。" />
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ポートフォリオ定期チェック｜標準モデルとのズレを60秒で可視化">
+  <meta property="og:description" content="年齢・リスク許容度・資産配分を入力して、標準モデルとの差を一画面で確認。年1回の見直しのきっかけに。">
+  <meta property="og:url" content="https://cleverkitjp.github.io/portfolio-check/">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="stylesheet" href="https://cleverkitjp.github.io/common.css">
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9727255179923866"
+     crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <main class="ck-wrap">
+    <header class="ck-hero">
+      <h1 class="ck-title">ポートフォリオ定期チェック</h1>
+      <p class="ck-sub">年1回、標準モデルとのズレだけを60秒で確認。</p>
+    </header>
+
+    <!-- 入力：基本 -->
+    <section class="card card--accent">
+      <h2 class="card-title">基本入力</h2>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="age" class="field-label">年齢</label>
+          <span class="pill" id="agePill" aria-live="polite">35歳</span>
+        </div>
+        <input id="age" type="range" min="20" max="70" step="1" value="35" />
+        <div class="hint">20〜70の範囲で調整</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">リスク許容度</span>
+          <span class="hint-inline" id="riskHint" aria-live="polite">選択してください</span>
+        </div>
+
+        <div class="seg" role="radiogroup" aria-label="リスク許容度">
+          <button type="button" class="seg-btn" data-risk="low" aria-checked="false" role="radio">低い</button>
+          <button type="button" class="seg-btn" data-risk="mid" aria-checked="false" role="radio">普通</button>
+          <button type="button" class="seg-btn" data-risk="high" aria-checked="false" role="radio">高い</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 入力：配分 -->
+    <section class="card card--accent" id="allocCard">
+      <h2 class="card-title">現在の資産配分（合計100%）</h2>
+
+      <div class="grid-2">
+        <div class="pct-field">
+          <label for="pctStocks">株式</label>
+          <div class="pct-wrap">
+            <input id="pctStocks" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+            <span class="pct">%</span>
+          </div>
+        </div>
+
+        <div class="pct-field">
+          <label for="pctBonds">債券</label>
+          <div class="pct-wrap">
+            <input id="pctBonds" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+            <span class="pct">%</span>
+          </div>
+        </div>
+
+        <div class="pct-field">
+          <label for="pctCash">現金</label>
+          <div class="pct-wrap">
+            <input id="pctCash" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+            <span class="pct">%</span>
+          </div>
+        </div>
+
+        <div class="pct-field">
+          <label for="pctOther">その他</label>
+          <div class="pct-wrap">
+            <input id="pctOther" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" />
+            <span class="pct">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sum-row" aria-live="polite">
+        <div class="sum-left">
+          <span class="sum-label">合計</span>
+          <span class="sum-value" id="sumValue">0%</span>
+        </div>
+        <div class="sum-right">
+          <span class="sum-msg" id="sumMsg">株式・債券・現金・その他の合計を100%にしてください</span>
+        </div>
+      </div>
+
+      <div class="error" id="allocError" role="alert" hidden></div>
+
+      <details class="details" id="detailBox">
+        <summary>
+          <span>詳細（任意）：株式の内訳</span>
+          <span class="summary-sub">（国内株・海外株・暗号資産）</span>
+        </summary>
+
+        <div class="details-body">
+          <div class="grid-3">
+            <div class="pct-field">
+              <label for="eqJp">国内株</label>
+              <div class="pct-wrap">
+                <input id="eqJp" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="—" />
+                <span class="pct">%</span>
+              </div>
+            </div>
+
+            <div class="pct-field">
+              <label for="eqGlobal">海外株</label>
+              <div class="pct-wrap">
+                <input id="eqGlobal" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="—" />
+                <span class="pct">%</span>
+              </div>
+            </div>
+
+            <div class="pct-field">
+              <label for="eqCrypto">暗号資産</label>
+              <div class="pct-wrap">
+                <input id="eqCrypto" type="number" inputmode="decimal" min="0" max="100" step="0.1" placeholder="—" />
+                <span class="pct">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini" id="eqMini" aria-live="polite">
+            <span class="mini-label">内訳合計</span>
+            <span class="mini-value" id="eqSumValue">—</span>
+            <span class="mini-msg" id="eqSumMsg">未入力なら判定しません</span>
+          </div>
+          <div class="error" id="eqError" role="alert" hidden></div>
+        </div>
+      </details>
+
+      <div class="cta-row">
+        <button id="btnCalc" class="btn-primary" type="button" disabled>判定する</button>
+        <button id="btnReset" class="btn-ghost" type="button">リセット</button>
+      </div>
+
+      <p class="note">※ 一般的な目安であり、投資助言ではありません。</p>
+    </section>
+
+    <!-- 結果 -->
+    <section class="card" id="resultCard" hidden>
+      <h2 class="card-title">結果</h2>
+
+      <div class="verdict">
+        <span class="badge" id="verdictBadge">—</span>
+        <div class="verdict-text" id="verdictText">—</div>
+      </div>
+
+      <div class="summary">
+        <h3 class="subhead">乖離サマリ（あなた − 標準モデル）</h3>
+        <ul class="diff-list" id="diffList"></ul>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-head">
+          <h3 class="subhead">モデル配分 vs あなたの配分</h3>
+          <div class="chart-legend">
+            <span class="lg"><i class="dot dot-model"></i>標準モデル</span>
+            <span class="lg"><i class="dot dot-you"></i>あなた</span>
+          </div>
+        </div>
+        <canvas id="barChart" width="360" height="220" aria-label="比較グラフ" role="img"></canvas>
+      </div>
+
+      <div class="next">
+        <h3 class="subhead">次アクション（年1回）</h3>
+        <p id="nextAction" class="next-text"></p>
+      </div>
+
+      <div class="crypto" id="cryptoBox" hidden>
+        <h3 class="subhead">参考（暗号資産）</h3>
+        <p id="cryptoNote" class="crypto-text"></p>
+      </div>
+
+      <div class="model">
+        <h3 class="subhead">今回参照した標準モデル</h3>
+        <div class="model-row" id="modelMeta"></div>
+        <div class="model-grid" id="modelGrid"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">使い方</h2>
+      <ol class="steps">
+        <li>年齢とリスク許容度を選択</li>
+        <li>資産配分（%）を入力（合計100%）</li>
+        <li>「判定する」でズレを確認</li>
+      </ol>
+    </section>
+  </main>
+
+  <div id="ck-footer-container"></div>
+
+  <script src="./script.js"></script>
+
+  <script>
+    (function() {
+      var container = document.getElementById('ck-footer-container');
+      if (!container) return;
+
+      fetch('https://cleverkitjp.github.io/footer.html')
+        .then(function(response) { return response.text(); })
+        .then(function(html) {
+          container.innerHTML = html;
+
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (e) {
+            console.warn('adsbygoogle error', e);
+          }
+        })
+        .catch(function(e) {
+          console.warn('footer load error', e);
+        });
+    })();
+  </script>
+</body>
+</html>
