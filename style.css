@@ -1,5 +1,46 @@
 /* UI: common.css を前提に、入力・選択の視認性を強化 */
 
+:root {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1d2433;
+  --text-sub: #5d667a;
+  --border: #d7dce6;
+  --accent: #2f7cf6;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a { color: var(--accent); }
+
+button,
+input { font: inherit; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  margin: 12px 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.card--accent {
+  border-color: color-mix(in oklab, var(--accent) 25%, var(--border));
+  box-shadow: 0 12px 26px color-mix(in oklab, var(--accent) 18%, transparent);
+}
+
 .ck-wrap { max-width: 920px; margin: 0 auto; padding: 14px; }
 .ck-hero { margin: 10px 0 14px; }
 .ck-title { font-size: 22px; line-height: 1.2; margin: 0 0 6px; }
