@@ -272,7 +272,14 @@ input[type="range"]::-moz-range-track {
 .dot-model { background: color-mix(in oklab, var(--accent) 30%, white); }
 .dot-you { background: color-mix(in oklab, var(--accent) 75%, black); }
 
-canvas { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--border); background: white; }
+.chart-frame {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: white;
+  padding: 12px 12px 14px;
+}
+
+canvas { width: 100%; height: auto; display: block; border-radius: 10px; }
 
 .steps { margin: 0; padding-left: 18px; color: var(--text); }
 .steps li { margin: 6px 0; }
